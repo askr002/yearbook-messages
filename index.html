@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Messages from Friends — Class of 2025</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Lora:ital,wght@0,400;0,500;1,400&family=Dancing+Script:wght@600&display=swap" rel="stylesheet" />
+  <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream:   #fdf6ec;
+      --parchment: #f5e9d0;
+      --warm-tan: #e6d2b0;
+      --ink:     #2b2118;
+      --sepia:   #7a5c3a;
+      --gold:    #c9923a;
+      --gold-lt: #e8b86d;
+      --navy:    #1e2d4a;
+      --rust:    #b04a2e;
+      --sage:    #5a7a60;
+      --blush:   #c97870;
+      --shadow:  rgba(43,33,24,.18);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background-color: var(--cream);
+      background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='.035'/%3E%3C/svg%3E");
+      color: var(--ink);
+      font-family: 'Lora', Georgia, serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ── Decorative rule ──────────────────────────────────────── */
+    .rule {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--gold);
+      font-size: .75rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .rule::before, .rule::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+
+    /* ── Hero Header ──────────────────────────────────────────── */
+    .site-header {
+      text-align: center;
+      padding: 80px 24px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 70% 60% at 50% 0%, rgba(201,146,58,.13) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .header-eyebrow {
+      font-family: 'Dancing Script', cursive;
+      font-size: clamp(1.1rem, 3vw, 1.5rem);
+      color: var(--sepia);
+      margin-bottom: 12px;
+      opacity: 0;
+      animation: fadeUp .8s .2s forwards;
+    }
+
+    .header-title {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2.4rem, 7vw, 5.2rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--navy);
+      letter-spacing: -.02em;
+      opacity: 0;
+      animation: fadeUp .9s .4s forwards;
+    }
+    .header-title em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .header-subtitle {
+      margin-top: 16px;
+      font-family: 'Lora', serif;
+      font-size: clamp(.9rem, 2.5vw, 1.1rem);
+      color: var(--sepia);
+      letter-spacing: .08em;
+      opacity: 0;
+      animation: fadeUp .9s .6s forwards;
+    }
+
+    .header-rule {
+      margin: 32px auto 0;
+      max-width: 320px;
+      opacity: 0;
+      animation: fadeUp .9s .8s forwards;
+    }
+
+    /* ── Search / Filter Bar ──────────────────────────────────── */
+    .controls {
+      max-width: 640px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      opacity: 0;
+      animation: fadeUp .9s 1s forwards;
+    }
+    .search-wrap {
+      position: relative;
+    }
+    .search-wrap svg {
+      position: absolute;
+      left: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--sepia);
+      pointer-events: none;
+    }
+    #search {
+      width: 100%;
+      padding: 14px 16px 14px 46px;
+      border: 1.5px solid var(--warm-tan);
+      border-radius: 50px;
+      background: rgba(255,255,255,.7);
+      font-family: 'Lora', serif;
+      font-size: .95rem;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .25s, box-shadow .25s;
+      backdrop-filter: blur(4px);
+    }
+    #search::placeholder { color: var(--sepia); opacity: .6; }
+    #search:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(201,146,58,.12);
+    }
+
+    /* ── Message count ──────────────────────────────────────────── */
+    .msg-count {
+      text-align: center;
+      font-size: .82rem;
+      color: var(--sepia);
+      letter-spacing: .06em;
+      margin-bottom: 40px;
+      font-style: italic;
+    }
+
+    /* ── Cards Grid ───────────────────────────────────────────── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+      gap: 36px 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+      align-items: start;
+    }
+
+    /* ── Individual Card ──────────────────────────────────────── */
+    .card {
+      background: #fffdf8;
+      border: 1px solid var(--warm-tan);
+      border-radius: 4px;
+      box-shadow: 4px 6px 24px var(--shadow), 0 1px 0 rgba(255,255,255,.9) inset;
+      overflow: hidden;
+      position: relative;
+      transition: transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
+      opacity: 0;
+      transform: translateY(28px);
+    }
+    .card.visible {
+      animation: cardReveal .65s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .card:hover {
+      transform: translateY(-5px) rotate(.25deg) scale(1.01);
+      box-shadow: 8px 16px 40px var(--shadow);
+      z-index: 2;
+    }
+
+    /* Colour-coded top stripe */
+    .card::before {
+      content: '';
+      display: block;
+      height: 5px;
+      background: var(--stripe, var(--gold));
+    }
+
+    /* Polaroid-style photo frame */
+    .card-photo-wrap {
+      padding: 14px 14px 8px;
+      background: #fff;
+      position: relative;
+    }
+    .card-photo-wrap img {
+      width: 100%;
+      aspect-ratio: 4/3;
+      object-fit: cover;
+      display: block;
+      border: 1px solid var(--warm-tan);
+      filter: sepia(12%) contrast(1.04) brightness(1.02);
+      transition: filter .4s;
+    }
+    .card:hover .card-photo-wrap img {
+      filter: sepia(0%) contrast(1.05) brightness(1.04);
+    }
+
+    /* ── Card Body ──────────────────────────────────────────────── */
+    .card-body {
+      padding: 20px 22px 24px;
+    }
+
+    .card-from {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.35rem;
+      color: var(--sepia);
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+    .card-from span {
+      display: block;
+      font-family: 'Lora', serif;
+      font-size: .72rem;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--gold);
+      font-style: normal;
+      font-weight: 500;
+    }
+
+    .card-divider {
+      border: none;
+      height: 1px;
+      background: linear-gradient(90deg, var(--warm-tan), transparent);
+      margin: 12px 0;
+    }
+
+    .card-message {
+      font-size: .95rem;
+      line-height: 1.75;
+      color: #3d2e1e;
+      font-style: italic;
+      position: relative;
+      padding-left: 18px;
+    }
+    .card-message::before {
+      content: '\201C';
+      position: absolute;
+      left: 0;
+      top: -4px;
+      font-family: 'Playfair Display', serif;
+      font-size: 2.6rem;
+      line-height: 1;
+      color: var(--gold-lt);
+    }
+
+    .card-footer {
+      margin-top: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .card-to-label {
+      font-size: .72rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      opacity: .7;
+    }
+    .card-to-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--navy);
+      font-weight: 700;
+    }
+    .card-heart {
+      font-size: 1rem;
+      opacity: .5;
+      transition: opacity .25s, transform .25s;
+      cursor: default;
+      user-select: none;
+    }
+    .card:hover .card-heart {
+      opacity: 1;
+      transform: scale(1.3);
+    }
+
+    /* ── No results ──────────────────────────────────────────────── */
+    .no-results {
+      grid-column: 1/-1;
+      text-align: center;
+      padding: 60px 0;
+      opacity: .55;
+      font-style: italic;
+      font-size: 1.1rem;
+      color: var(--sepia);
+      display: none;
+    }
+
+    /* ── Footer ───────────────────────────────────────────────── */
+    .site-footer {
+      text-align: center;
+      padding: 28px 24px 40px;
+      font-size: .78rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--sepia);
+      opacity: .5;
+      border-top: 1px solid var(--warm-tan);
+    }
+
+    /* ── Animations ───────────────────────────────────────────── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes cardReveal {
+      from { opacity: 0; transform: translateY(28px) rotate(-.3deg); }
+      to   { opacity: 1; transform: translateY(0) rotate(0deg); }
+    }
+
+    /* ── Responsive tweaks ──────────────────────────────────────── */
+    @media (max-width: 480px) {
+      .site-header { padding: 56px 16px 44px; }
+      .cards-grid { gap: 24px 0; padding: 0 14px 80px; }
+      .card-body { padding: 16px 16px 20px; }
+    }
+  </style>  
+</head>
+<body>
+
+<!-- ═══ HEADER ════════════════════════════════════════════════ -->
+<header class="site-header">
+  <p class="header-eyebrow">Class of 2025 · Delhi School of Economics</p>
+  <h1 class="header-title">Messages<br>from <em>Friends</em></h1>
+  <p class="header-subtitle">✦ &nbsp; Words carried forward &nbsp; ✦</p>
+  <div class="header-rule rule">Yearbook Memories</div>
+</header>
+
+<!-- ═══ CONTROLS ══════════════════════════════════════════════ -->
+<div class="controls">
+  <div class="search-wrap">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+    </svg>
+    <input id="search" type="search" placeholder="Search by name or message…" autocomplete="off" />
+  </div>
+</div>
+<p class="msg-count" id="msgCount"></p>
+
+<!-- ═══ CARDS GRID ════════════════════════════════════════════ -->
+<main class="cards-grid" id="cardsGrid">
+
+  <!-- ── Card 1 ── -->
+  <article class="card" style="--stripe:#c9923a" data-from="Harsh Vashishtha" data-to="Jaiya Deswal" data-msg="Thank you for all the laughter throughout our MBA journey. From being the first one I started sharing memes with to those last-minute Google Meet revision sessions before exams,you made it all so memorable. Wishing you all the best for the future. Go make Bahadurgarh proud!">
+    <div class="card-photo-wrap">
+      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Priya and Aswin studying together" loading="lazy" />
+    </div>
+    <div class="card-body">
+      <p class="card-from"><span>From</span>Harsh Vashishtha</p>
+      <hr class="card-divider" />
+      <p class="card-message">Thank you for all the laughter throughout our MBA journey. From being the first one I started sharing memes with to those last-minute Google Meet revision sessions before exams,you made it all so memorable. Wishing you all the best for the future. Go make Bahadurgarh proud!</p>
+      <div class="card-footer">
+        <div>
+          <p class="card-to-label">To</p>
+          <p class="card-to-name">Jaiya Deswal</p>
+        </div>
+        <span class="card-heart">♥</span>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" style="--stripe:#c9923a" data-from="Harsh Singh" data-to="Naveen" data-msg="Go ahead, uncle maybe it’s time you got married already ">
+    <div class="card-photo-wrap">
+      <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&q=80" alt="Priya and Aswin studying together" loading="lazy" />
+    </div>
+    <div class="card-body">
+      <p class="card-from"><span>From</span>Harsh Singh</p>
+      <hr class="card-divider" />
+      <p class="card-message">Go ahead, uncle maybe it’s time you got married already </p>
+      <div class="card-footer">
+        <div>
+          <p class="card-to-label">To</p>
+          <p class="card-to-name">Naveen</p>
+        </div>
+        <span class="card-heart">♥</span>
+      </div>
+    </div>
+  </article>
+
+  <!-- ── No results state ── -->
+  <div class="no-results" id="noResults">No messages match your search.</div>
+</main>
+
+<!-- ═══ FOOTER ════════════════════════════════════════════════ -->
+<footer class="site-footer">
+  Class of 2025 · MBA–HRD · Delhi School of Economics, University of Delhi
+</footer>
+
+<!-- ═══ SCRIPT ════════════════════════════════════════════════ -->
+<script>
+  /* ── Intersection Observer: reveal cards on scroll ── */
+  const cards = document.querySelectorAll('.card');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        const card = entry.target;
+        const delay = Array.from(cards).indexOf(card) % 3 * 80;
+        setTimeout(() => card.classList.add('visible'), delay);
+        observer.unobserve(card);
+      }
+    });
+  }, { threshold: 0.08 });
+  cards.forEach(c => observer.observe(c));
+
+  /* ── Live search / filter ── */
+  const searchInput = document.getElementById('search');
+  const noResults   = document.getElementById('noResults');
+  const msgCount    = document.getElementById('msgCount');
+
+  function updateCount(visible) {
+    msgCount.textContent = `${visible} message${visible !== 1 ? 's' : ''}`;
+  }
+  updateCount(cards.length);
+
+  searchInput.addEventListener('input', () => {
+    const q = searchInput.value.trim().toLowerCase();
+    let visible = 0;
+    cards.forEach(card => {
+      const from = (card.dataset.from || '').toLowerCase();
+      const to   = (card.dataset.to   || '').toLowerCase();
+      const msg  = (card.dataset.msg  || '').toLowerCase();
+      const match = !q || from.includes(q) || to.includes(q) || msg.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) visible++;
+    });
+    noResults.style.display = visible === 0 ? 'block' : 'none';
+    updateCount(visible);
+  });
+</script>
+</body>
+</html>
